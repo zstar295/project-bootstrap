@@ -1,4 +1,4 @@
 interface:
-  display_name: "通用项目搭建"
-  short_description: "从项目目的生成可执行任务书、环境、工作单、按需上下文与可追溯记忆"
-  default_prompt: "使用 $project-bootstrap，根据我的项目目的补齐必要需求，并实际搭建和验收一个可执行的本地项目。"
+  display_name: "Codex 项目搭建"
+  short_description: "将用户需求转化为 Codex 可持续执行的本地项目、任务和上下文"
+  default_prompt: "使用 $project-bootstrap，将我的需求转化为 Codex 可持续执行的本地项目，补齐必要需求、搭建框架并检查首个任务的执行条件。"
