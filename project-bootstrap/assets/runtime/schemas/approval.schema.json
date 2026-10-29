@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Human-source approval bound to exact content",
+  "type": "object",
+  "required": ["id", "status", "approval_type", "approved_by", "session_id", "recorded_by", "recorded_at", "reason", "source", "targets"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^APP-[A-Za-z0-9_-]+$"},
+    "status": {"const": "human_confirmed"},
+    "approval_type": {"enum": ["specific_change", "bootstrap_user_requirements"]},
+    "approved_by": {"const": "human_user"},
+    "session_id": {"type": "string"},
+    "recorded_by": {"type": "string"},
+    "recorded_at": {"type": "string"},
+    "reason": {"type": "string", "minLength": 1},
+    "source": {"type": "object", "required": ["path", "sha256", "locator", "quote"], "properties": {"path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "locator": {"type": "string"}, "quote": {"type": "string", "minLength": 1}}},
+    "targets": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["path", "action"], "properties": {"path": {"type": "string"}, "action": {"enum": ["add", "modify", "delete"]}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}},
+    "candidates": {"type": "array", "items": {"type": "object", "required": ["id", "sha256"], "properties": {"id": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}}
+  }
+}

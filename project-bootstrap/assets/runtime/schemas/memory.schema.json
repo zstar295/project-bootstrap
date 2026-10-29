@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Project memory: candidate or human-approved record",
+  "type": "object",
+  "required": ["schema_version", "id", "status", "kind", "claim", "scope", "limitations", "origin", "evidence"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^MEM-[A-Za-z0-9_-]+$"},
+    "status": {"enum": ["proposed", "approved"]},
+    "kind": {"enum": ["user_requirement", "observation", "local_experience", "hypothesis", "method"]},
+    "claim": {"type": "string", "minLength": 1},
+    "scope": {"type": "string", "minLength": 1},
+    "limitations": {"type": "string", "minLength": 1},
+    "supersedes": {"type": ["string", "null"]},
+    "origin": {
+      "type": "object",
+      "required": ["task_id", "session_id", "actor", "recorded_at", "source_context"],
+      "properties": {"task_id": {"type": "string"}, "session_id": {"type": "string"}, "actor": {"type": "string"}, "recorded_at": {"type": "string"}, "source_context": {"$ref": "#/$defs/evidence"}}
+    },
+    "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}},
+    "approval_id": {"type": "string"},
+    "source_candidate": {"$ref": "#/$defs/evidence"}
+  },
+  "allOf": [{"if": {"properties": {"status": {"const": "approved"}}}, "then": {"required": ["approval_id", "source_candidate"]}}],
+  "$defs": {"evidence": {"type": "object", "required": ["path", "sha256", "locator"], "properties": {"path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "locator": {"type": "string"}}}}
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "project_id": "csv-quality-demo",
+  "name": "CSV 数据质量审查演示",
+  "goal": "为用户提供可重算的数据资格、缺失和重复记录审查报告",
+  "domain": "data",
+  "request": {
+    "text": "这是一份测试演示请求：请在指定目录搭建CSV数据质量审查项目，使用标准库，先检查项目环境，再实现可重算CSV审查报告。",
+    "authorization_quote": "请在指定目录搭建CSV数据质量审查项目",
+    "session_id": "SESSION-demo-local",
+    "actor": "demo-builder",
+    "source_kind": "test_fixture"
+  },
+  "scope": {"included": ["CSV来源、缺失与重复审查"], "excluded": ["修改原始CSV", "自动推断缺失值"]},
+  "success_criteria": ["每份输入有来源和哈希", "报告包含可定位的缺失/重复记录和可重算命令"],
+  "decisions": [{"claim": "先检查环境，再实现CSV审查", "status": "confirmed", "source_quote": "先检查项目环境，再实现可重算CSV审查报告"}],
+  "inputs": [{"id": "csv-source", "path": "inputs/source.csv", "purpose": "待审查的原始CSV", "status": "missing"}],
+  "tools": [],
+  "work_orders": [
+    {
+      "id": "WO-00", "title": "环境与执行前提", "goal": "核实项目框架、解释器及输入缺项", "role": "executor",
+      "depends_on": [], "required_inputs": [], "required_tools": [],
+      "actions": ["运行框架和解释器检查", "登记资料是否齐备"],
+      "outputs": ["reports/tasks/WO-00/environment.json"],
+      "acceptance": ["projectctl check通过；解释器路径与版本已记录；缺失数据明确标记"],
+      "commands": [{"argv": ["python", "-X", "utf8", "scripts/project_doctor.py", "--work-order", "WO-00"], "status": "planned"}]
+    },
+    {
+      "id": "WO-01", "title": "CSV资格审查", "goal": "完成最小CSV审查实现", "role": "executor",
+      "depends_on": ["WO-00"], "required_inputs": ["csv-source"], "required_tools": [],
+      "actions": ["实现实际需要的CSV审查程序", "小样例验证缺失、重复和原文件保留", "在真实来源上生成报告"],
+      "outputs": ["scripts/profile_csv.py", "reports/tasks/WO-01/report.json"],
+      "acceptance": ["已知缺失/重复夹具结果正确；原始CSV哈希不变；结果可定位输入记录"],
+      "commands": []
+    }
+  ],
+  "open_questions": [],
+  "large_artifact_paths": [],
+  "domain_notes": ["示例命令是计划状态；实际通过后在报告中保存证据。"]
+}
